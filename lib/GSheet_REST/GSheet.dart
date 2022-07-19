@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart';
 
 import 'package:test_application/GSheet_REST/GSheet_auth.dart';
 import 'package:test_application/GSheet_REST/Spreadsheet.dart';
@@ -31,35 +32,25 @@ class GSheet {
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$spreadsheetID');
     return client.get(uri).then((value) {
-      print(value.body);
-      return Spreadsheet.fromJson(jsonDecode(value.body));
+      return Spreadsheet.fromJson(json: jsonDecode(value.body), client: client);
     });
   }
 
-  Future<SheetData> allRows(Spreadsheet sheet, String name) async {
+  Future<Spreadsheet> createSpreadsheet(String title) async {
     final client = await this.client.catchError((_) {
       _client = null;
       return this.client;
     });
-    int? column =
-        sheet.getSheetsByName(name)?.properties?.gridProperties?.columnCount;
-    int? row =
-        sheet.getSheetsByName(name)?.properties?.gridProperties?.rowCount;
-    late String colRange;
-    try {
-      colRange = String.fromCharCode(column! + 64);
-    } catch (_) {
-      colRange = String.fromCharCode(26);
-    }
-    String sheetID = sheet.spreadsheetId!;
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
-        path: '/v4/spreadsheets/$sheetID/values/A1:$colRange' + row.toString());
-    return client.get(uri).then((value) {
-      print(value.body);
-      return SheetData.fromJson(jsonDecode(value.body));
+        path: '/v4/spreadsheets');
+    Map<String, dynamic> request = <String, dynamic>{};
+    request['properties'] = <String, dynamic>{};
+    request['properties']['title'] = "generatedSheet";
+    return client.post(uri, body: request).then((response) {
+      return Spreadsheet.fromJson(
+          json: jsonDecode(response.body), client: client);
     });
-
   }
 }

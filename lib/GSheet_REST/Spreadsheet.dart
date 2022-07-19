@@ -1,71 +1,96 @@
+import 'dart:convert';
+
+import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:http/http.dart';
+
 class Spreadsheet {
-  String? spreadsheetId;
-  List<Sheets>? sheets;
-  String? spreadsheetUrl;
+  final String spreadsheetId;
+  List<Worksheet> sheets;
+  final String spreadsheetUrl;
+  final AutoRefreshingAuthClient client;
 
-  Spreadsheet({this.spreadsheetId, this.sheets, this.spreadsheetUrl});
+  Spreadsheet(
+      {required this.spreadsheetId,
+      required this.sheets,
+      required this.spreadsheetUrl,
+      required this.client});
 
-  Spreadsheet.fromJson(Map<String, dynamic> json) {
-    spreadsheetId = json['spreadsheetId'];
+  factory Spreadsheet.fromJson(
+      {required Map<String, dynamic> json,
+      required AutoRefreshingAuthClient client}) {
+    final String spreadsheetId = json['spreadsheetId'];
+    final List<Worksheet> sheets = <Worksheet>[];
+    final String spreadsheetUrl = json['spreadsheetUrl'];
     if (json['sheets'] != null) {
-      sheets = <Sheets>[];
       json['sheets'].forEach((v) {
-        sheets!.add(new Sheets.fromJson(v));
+        sheets.add(Worksheet.fromJson(json: v, client: client));
       });
     }
-    spreadsheetUrl = json['spreadsheetUrl'];
+    return Spreadsheet(
+        spreadsheetId: spreadsheetId,
+        sheets: sheets,
+        spreadsheetUrl: spreadsheetUrl,
+        client: client);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['spreadsheetId'] = this.spreadsheetId;
-    if (this.sheets != null) {
-      data['sheets'] = this.sheets!.map((v) => v.toJson()).toList();
-    }
-    data['spreadsheetUrl'] = this.spreadsheetUrl;
-    return data;
+  Worksheet? getSheetsByName(String name) {
+    return sheets.firstWhere((element) => element.properties?.title == name);
   }
 
-  Sheets? getSheetsByName(String name) {
-    return sheets?.firstWhere((element) => element.properties?.title == name);
-  }
-
-  Sheets? getSheetsByIndex(int index) {
-    return sheets?.firstWhere((element) => element.properties?.index == index);
+  Worksheet? getSheetsByIndex(int index) {
+    return sheets.firstWhere((element) => element.properties?.index == index);
   }
 }
 
-class Sheets {
+class Worksheet {
   Properties? properties;
-  List<RowGroups>? rowGroups;
+  final AutoRefreshingAuthClient client;
+  Worksheet({required this.properties, required this.client});
 
-  Sheets({this.properties, this.rowGroups});
-
-  Sheets.fromJson(Map<String, dynamic> json) {
-    properties = json['properties'] != null
+  factory Worksheet.fromJson(
+      {required Map<String, dynamic> json,
+      required AutoRefreshingAuthClient client}) {
+    Properties? properties = json['properties'] != null
         ? Properties.fromJson(json['properties'])
         : null;
-    if (json['rowGroups'] != null) {
-      rowGroups = <RowGroups>[];
-      json['rowGroups'].forEach((v) {
-        rowGroups!.add(RowGroups.fromJson(v));
-      });
-    }
+    return Worksheet(properties: properties, client: client);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (properties != null) {
-      data['properties'] = properties!.toJson();
+  Future<SheetData> allRows() async {
+    int? column = properties?.gridProperties?.columnCount;
+    int? row = properties?.gridProperties?.rowCount;
+    
+    late String colRange;
+    try {
+      colRange = String.fromCharCode(column! + 64);
+    } catch (_) {
+      colRange = String.fromCharCode(26);
     }
-    if (rowGroups != null) {
-      data['rowGroups'] = rowGroups!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    String sheetID = properties!.spreadsheetId!;
+    Uri uri = Uri(
+        scheme: 'https',
+        host: 'sheets.googleapis.com',
+        path: '/v4/spreadsheets/$sheetID/values/A1:$colRange' + row.toString());
+    return client.get(uri).then((value) {
+      return SheetData.fromJson(jsonDecode(value.body));
+    });
   }
+  
+  Future<bool> appendRow(List<List<String>> values) async {
+    String spreadsheetID = properties!.spreadsheetId!;
 
-  String? getName() {
-    return properties?.title;
+    Uri uri = Uri(
+        scheme: 'https',
+        host: 'sheets.googleapis.com',
+        path: '/v4/spreadsheets/$spreadsheetID/values/' +
+            properties!.title! +
+            '!A1:append',
+        queryParameters: {'valueInputOption': "RAW"});
+    Map<String, dynamic> request = <String, dynamic>{};
+    request['values'] = values;
+    return client.post(uri, body: jsonEncode(request)).then((response) {
+      return checkResponse(response);
+    });
   }
 }
 
@@ -130,27 +155,6 @@ class GridProperties {
   }
 }
 
-class RowGroups {
-  Range? range;
-  int? depth;
-
-  RowGroups({this.range, this.depth});
-
-  RowGroups.fromJson(Map<String, dynamic> json) {
-    range = json['range'] != null ? new Range.fromJson(json['range']) : null;
-    depth = json['depth'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.range != null) {
-      data['range'] = this.range!.toJson();
-    }
-    data['depth'] = this.depth;
-    return data;
-  }
-}
-
 class Range {
   String? dimension;
   int? startIndex;
@@ -199,5 +203,13 @@ class SheetData {
       data['values'] = this.values;
     }
     return data;
+  }
+}
+
+bool checkResponse(Response response) {
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
   }
 }

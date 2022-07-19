@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:gsheets/gsheets.dart';
 import 'package:test_application/Constants/GSheetsAPIConfig.dart';
+import 'package:test_application/GSheet_REST/Spreadsheet.dart';
 import 'package:test_application/Model/HistoryModel.dart';
 import 'package:test_application/Repository/HistoryRepository/HistoryRepository.dart';
 
 class GSheetsHistoryRepository implements HistoryRepository {
-  Spreadsheet? _spreadsheet;
-  Worksheet? _worksheet;
+  Future<Spreadsheet>? _spreadsheet;
 
-  void initialize(Spreadsheet spreadsheet) {
-    _spreadsheet = spreadsheet;
-    _worksheet = _spreadsheet
-        ?.worksheetByTitle(GSheetsAPIConfig.HISTORY_WORKSHEET_TITLE);
+  Future<Spreadsheet> get spreadsheet {
+    _spreadsheet ??= GSheetsAPIConfig.gSheet
+        .getSpreadsheet(GSheetsAPIConfig.HISTORY_SPREAD_ID);
+    return _spreadsheet!;
   }
 
   @override
-  Future<bool> appendData(History history) {
-    if (_worksheet != null) {
-      return _worksheet!.values.appendRow(History.toRow(history));
-    } 
-    else {
+  Future<bool> appendData(List<History> histories) async {
+    final Spreadsheet spreadsheet = await this.spreadsheet.catchError((_) {
+      _spreadsheet = null;
+      return this.spreadsheet;
+    });
+    Worksheet? worksheet = spreadsheet.getSheetsByIndex(0);
+
+    if (worksheet != null) {
+      List<List<String>> data = histories.map((e) => History.toRow(e)).toList();
+      return worksheet!.appendRow(data);
+    } else {
       return Future(
         () => false,
       );

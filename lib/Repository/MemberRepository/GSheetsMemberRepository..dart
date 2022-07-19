@@ -1,26 +1,31 @@
 import 'package:flutter/foundation.dart';
-import 'package:gsheets/gsheets.dart';
 import 'package:test_application/Constants/GSheetsAPIConfig.dart';
+import 'package:test_application/GSheet_REST/Spreadsheet.dart';
 import 'package:test_application/Repository/MemberRepository/MemberRepository.dart';
 
 import '../../Model/MemberModel.dart';
 
 class GSheetsMemberRepository implements MemberRepository {
-  Spreadsheet? _spreadsheet;
-  Worksheet? _worksheet;
-  List<Member> memberList = [];
+  Future<Spreadsheet>? _spreadsheet;
 
-  void initialize(Spreadsheet spreadsheet) {
-    _spreadsheet = spreadsheet;
-    _worksheet =
-        _spreadsheet?.worksheetByTitle(GSheetsAPIConfig.MEMBER_WORKSHEET_TITLE);
+  Future<Spreadsheet> get spreadsheet {
+    _spreadsheet ??= GSheetsAPIConfig.gSheet
+        .getSpreadsheet(GSheetsAPIConfig.MEMBER_SPREAD_ID);
+
+    return _spreadsheet!;
   }
 
   @override
-  Future<List<Member>> getAllData() {
-    if (_worksheet != null) {
-      return _worksheet!.values.allRows().then((value) {
-        return value.map((e) => Member.fromData(e)).toList();
+  Future<List<Member>> getAllData() async {
+    final Spreadsheet spreadsheet = await this.spreadsheet.catchError((_) {
+      _spreadsheet = null;
+      return this.spreadsheet;
+    });
+    Worksheet? worksheet = spreadsheet.getSheetsByIndex(0);
+
+    if (worksheet != null) {
+      return worksheet!.allRows().then((value) {
+        return value.values.map((e) => Member.fromData(e)).toList();
       });
     } else {
       return Future.error(Exception('no worksheet'));
