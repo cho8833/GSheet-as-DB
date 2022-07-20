@@ -7,8 +7,7 @@ import 'package:test_application/Provider/PostNotiProvider.dart';
 import 'package:test_application/Provider/StatusProvider.dart';
 import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import 'package:test_application/Screen/PostScreen/PostScreen.dart';
-
-import 'package:test_application/Screen/SelectScreenWidget.dart';
+import 'package:test_application/Screen/TerminationScreen/TerminationScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,22 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("패스파인더 알림톡"),
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => StatusProvider(),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Flexible(
-                flex: 9,
-                child: PostScreen(),
-              )
-            ]),
-      ),
+      body: TerminationScreen(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.mail),
-            
             label: Constants.postButtonTitle,
           ),
           BottomNavigationBarItem(

@@ -19,5 +19,4 @@ class StatusProvider extends ChangeNotifier {
   }
 
   ScreenType get screenType => _screenType;
-  
 }

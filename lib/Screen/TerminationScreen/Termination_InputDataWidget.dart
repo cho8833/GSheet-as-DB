@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_application/Constants/Constants.dart';
-import 'package:test_application/Model/PostNotiModel.dart';
-import 'package:test_application/Provider/MemberProvider.dart';
-import 'package:test_application/Provider/PostNotiProvider.dart';
-
+import 'package:test_application/Model/TerminationNotiModel.dart';
+import 'package:test_application/Provider/TerminationNotiProvider.dart';
+import '../../Constants/Constants.dart';
 import '../../Model/MemberModel.dart';
 
-class Post_InputDataWidget extends StatefulWidget {
-  const Post_InputDataWidget({Key? key}) : super(key: key);
+import '../../Model/PostNotiModel.dart';
+import '../../Provider/MemberProvider.dart';
+
+class Termination_InputDataWidget extends StatefulWidget {
+  const Termination_InputDataWidget({Key? key}) : super(key: key);
 
   @override
-  State<Post_InputDataWidget> createState() => _Post_InputDataWidgetState();
+  State<Termination_InputDataWidget> createState() =>
+      _Termination_InputDataWidgetState();
 }
 
-class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
+class _Termination_InputDataWidgetState
+    extends State<Termination_InputDataWidget> {
   TextEditingController senderTextController = TextEditingController();
   TextEditingController countTextController = TextEditingController();
 
-  PostNoti inputData = PostNoti(
-      member: Member(phoneNumber: '', name: ''), postCount: "", sender: "");
+  TerminationNoti inputData = TerminationNoti(
+      member: Member(phoneNumber: '', name: ''), moveInType: "", date: "");
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,11 +119,11 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                   ),
                   child: TextField(
                       onChanged: (value) {
-                        inputData.sender = value;
+                        inputData.moveInType = value;
                       },
                       controller: senderTextController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: "우편물 발신인"))),
+                          border: OutlineInputBorder(), labelText: "입주유형"))),
             ),
             Flexible(
               flex: 1,
@@ -134,11 +138,12 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                   ),
                   child: TextField(
                       onChanged: (value) {
-                        inputData.postCount = value;
+                        inputData.date = value;
                       },
                       controller: countTextController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: "우편물 개수"))),
+                          border: OutlineInputBorder(),
+                          labelText: "계약종료_월/일"))),
             ),
             Flexible(
               flex: 1,
@@ -157,8 +162,8 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                     maximumSize: const Size(200, 50),
                   ),
                   onPressed: () {
-                    Provider.of<PostNotiProvider>(context, listen: false)
-                        .addNoti(PostNoti.clone(inputData));
+                    Provider.of<TerminationNotiProvier>(context, listen: false)
+                        .addNoti(TerminationNoti.clone(inputData));
                   },
                   child: Text("등록하기"),
                 ),
