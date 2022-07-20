@@ -6,4 +6,7 @@ class Member {
   factory Member.fromData(List<String> data) {
     return Member(name: data[0], phoneNumber: data[1]);
   }
+  factory Member.clone(Member data) {
+    return Member(name: data.name, phoneNumber: data.phoneNumber);
+  }
 }

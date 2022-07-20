@@ -27,7 +27,7 @@ class GSheet {
       _client = null;
       return this.client;
     });
-    
+
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
@@ -47,12 +47,21 @@ class GSheet {
         scheme: 'https',
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets');
-    Map<String, dynamic> request = <String, dynamic>{};
-    request['properties'] = <String, dynamic>{};
-    request['properties']['title'] = "generatedSheet";
-    return client.post(uri, body: request).then((response) {
-      return Spreadsheet.fromJson(
-          json: jsonDecode(response.body), client: client);
+    return client.post(uri).then((response) {
+      if (checkResponse(response)) {
+        return Spreadsheet.fromJson(
+            json: jsonDecode(response.body), client: client);
+      } else {
+        return Future.error(Exception("Error"));
+      }
     });
+  }
+}
+
+bool checkResponse(Response response) {
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
   }
 }

@@ -5,21 +5,29 @@ import 'package:test_application/Repository/TableRepository/TableRepository.dart
 import '../Model/PostNotiModel.dart';
 
 class PostNotiProvider extends ChangeNotifier {
-  List<PostNoti> notifies = [];
+  final List<PostNoti> _notifies = [];
   final TableRepository _repository = GSheetsTableRepository();
 
   void addNoti(PostNoti noti) {
-    notifies.add(noti);
+    _notifies.add(noti);
+    _notifies.forEach((element) {
+      print(element.member.name +
+          element.member.phoneNumber +
+          element.sender +
+          element.postCount);
+    });
     notifyListeners();
   }
 
+  List<PostNoti> get notifies => _notifies;
+  
   void deleteNoti(int index) {
-    notifies.removeAt(index);
+    _notifies.removeAt(index);
     notifyListeners();
   }
 
   void commit() {
-    _repository.appendData(notifies).then((isSuccess) {
+    _repository.appendData(_notifies).then((isSuccess) {
       notifyListeners();
     });
   }

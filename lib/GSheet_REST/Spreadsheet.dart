@@ -23,7 +23,8 @@ class Spreadsheet {
     final String spreadsheetUrl = json['spreadsheetUrl'];
     if (json['sheets'] != null) {
       json['sheets'].forEach((v) {
-        sheets.add(Worksheet.fromJson(json: v, client: client));
+        sheets.add(Worksheet.fromJson(
+            spreadsheetID: spreadsheetId, json: v, client: client));
       });
     }
     return Spreadsheet(
@@ -45,15 +46,22 @@ class Spreadsheet {
 class Worksheet {
   Properties? properties;
   final AutoRefreshingAuthClient client;
-  Worksheet({required this.properties, required this.client});
+  String spreadsheetID;
+
+  Worksheet(
+      {required this.properties,
+      required this.client,
+      required this.spreadsheetID});
 
   factory Worksheet.fromJson(
       {required Map<String, dynamic> json,
-      required AutoRefreshingAuthClient client}) {
+      required AutoRefreshingAuthClient client,
+      required String spreadsheetID}) {
     Properties? properties = json['properties'] != null
         ? Properties.fromJson(json['properties'])
         : null;
-    return Worksheet(properties: properties, client: client);
+    return Worksheet(
+        properties: properties, client: client, spreadsheetID: spreadsheetID);
   }
 
   Future<SheetData> allRows() async {
@@ -66,11 +74,11 @@ class Worksheet {
     } catch (_) {
       colRange = String.fromCharCode(26);
     }
-    String sheetID = properties!.spreadsheetId!;
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
-        path: '/v4/spreadsheets/$sheetID/values/A1:$colRange' + row.toString());
+        path: '/v4/spreadsheets/$spreadsheetID/values/A1:$colRange' +
+            row.toString());
     return client.get(uri).then((value) {
       // check response
       return SheetData.fromJson(jsonDecode(value.body));
@@ -78,17 +86,14 @@ class Worksheet {
   }
 
   Future<bool> appendRow(List<List<String>> values) async {
-    String spreadsheetID = properties!.spreadsheetId!;
-
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
-        path: '/v4/spreadsheets/$spreadsheetID/values/' +
-            properties!.title! +
-            '!A1:append',
+        path: '/v4/spreadsheets/$spreadsheetID/values/A1:append',
         queryParameters: {'valueInputOption': "RAW"});
-    Map<String, dynamic> request = <String, dynamic>{};
-    request['values'] = values;
+    Map<String, String> request = <String, String>{};
+    request['values'] = jsonEncode(values);
+    print(jsonEncode(request));
     return client.post(uri, body: jsonEncode(request)).then((response) {
       return checkResponse(response);
     });
@@ -101,7 +106,6 @@ class Properties {
   int? index;
   String? sheetType;
   GridProperties? gridProperties;
-  String? spreadsheetId;
 
   Properties({
     this.sheetId,

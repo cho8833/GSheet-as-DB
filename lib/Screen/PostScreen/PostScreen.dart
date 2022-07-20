@@ -19,7 +19,7 @@ class _PostScreenState extends State<PostScreen> {
     return ChangeNotifierProvider(
       create: (_) => PostNotiProvider(),
       child: Scaffold(
-        body: Column(
+        body: Row(
           children: const [
             Flexible(
               flex: 5,
