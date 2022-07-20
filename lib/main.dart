@@ -3,12 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:test_application/Constants/Constants.dart';
 import 'package:test_application/Provider/HistoryProvider.dart';
 import 'package:test_application/Provider/MemberProvider.dart';
-import 'package:test_application/Provider/PostNotiProvider.dart';
 import 'package:test_application/Provider/StatusProvider.dart';
-import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import 'package:test_application/Screen/PostScreen/PostScreen.dart';
-
-import 'package:test_application/Screen/SelectScreenWidget.dart';
 
 void main() {
   runApp(MyApp());

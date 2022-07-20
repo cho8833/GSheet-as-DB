@@ -91,8 +91,8 @@ class Worksheet {
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$spreadsheetID/values/A1:append',
         queryParameters: {'valueInputOption': "RAW"});
-    Map<String, String> request = <String, String>{};
-    request['values'] = jsonEncode(values);
+    Map<String, dynamic> request = <String, dynamic>{};
+    request['values'] = values;
     print(jsonEncode(request));
     return client.post(uri, body: jsonEncode(request)).then((response) {
       return checkResponse(response);

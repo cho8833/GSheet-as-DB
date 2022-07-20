@@ -10,7 +10,7 @@ class GSheet {
   Future<AutoRefreshingAuthClient>? _client;
 
   Future<AutoRefreshingAuthClient> get client {
-    _client = GSheet_auth.auth(client: _client);
+    _client = GSheet_auth.obtainCredentials(client: _client) as Future<AutoRefreshingAuthClient>?;
 
     return _client!;
   }
@@ -47,7 +47,9 @@ class GSheet {
         scheme: 'https',
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets');
-    return client.post(uri).then((response) {
+    Map<String, dynamic> request = <String, dynamic>{};
+    request['properties'] = {"title": "generateSheet"};
+    return client.post(uri, body: jsonEncode(request)).then((response) {
       if (checkResponse(response)) {
         return Spreadsheet.fromJson(
             json: jsonDecode(response.body), client: client);
