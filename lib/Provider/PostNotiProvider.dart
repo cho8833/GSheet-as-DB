@@ -10,10 +10,12 @@ class PostNotiProvider extends ChangeNotifier {
 
   void addNoti(PostNoti noti) {
     notifies.add(noti);
+    notifyListeners();
   }
 
   void deleteNoti(int index) {
     notifies.removeAt(index);
+    notifyListeners();
   }
 
   void commit() {

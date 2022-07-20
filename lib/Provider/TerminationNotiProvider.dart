@@ -11,10 +11,12 @@ class TerminationNotiProvier extends ChangeNotifier {
 
   void addNoti(TerminationNoti noti) {
     notifies.add(noti);
+    notifyListeners();
   }
 
   void deleteNoti(int index) {
     notifies.removeAt(index);
+    notifyListeners();
   }
 
   void commit() {

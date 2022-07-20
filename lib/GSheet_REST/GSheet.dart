@@ -27,11 +27,13 @@ class GSheet {
       _client = null;
       return this.client;
     });
+    
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$spreadsheetID');
     return client.get(uri).then((value) {
+      // check response
       return Spreadsheet.fromJson(json: jsonDecode(value.body), client: client);
     });
   }

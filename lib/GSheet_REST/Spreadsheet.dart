@@ -59,7 +59,7 @@ class Worksheet {
   Future<SheetData> allRows() async {
     int? column = properties?.gridProperties?.columnCount;
     int? row = properties?.gridProperties?.rowCount;
-    
+
     late String colRange;
     try {
       colRange = String.fromCharCode(column! + 64);
@@ -72,10 +72,11 @@ class Worksheet {
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$sheetID/values/A1:$colRange' + row.toString());
     return client.get(uri).then((value) {
+      // check response
       return SheetData.fromJson(jsonDecode(value.body));
     });
   }
-  
+
   Future<bool> appendRow(List<List<String>> values) async {
     String spreadsheetID = properties!.spreadsheetId!;
 

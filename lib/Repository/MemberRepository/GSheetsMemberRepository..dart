@@ -24,7 +24,7 @@ class GSheetsMemberRepository implements MemberRepository {
     Worksheet? worksheet = spreadsheet.getSheetsByIndex(0);
 
     if (worksheet != null) {
-      return worksheet!.allRows().then((value) {
+      return worksheet.allRows().then((value) {
         return value.values.map((e) => Member.fromData(e)).toList();
       });
     } else {
