@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:test_application/Constants/Constants.dart';
-import 'package:test_application/Model/PostNotiModel.dart';
-import 'package:test_application/Provider/PostNotiProvider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:test_application/Provider/TerminationNotiProvider.dart';
 
-class Post_CommitTableWidget extends StatefulWidget {
-  const Post_CommitTableWidget({Key? key}) : super(key: key);
+import '../../Constants/Constants.dart';
+
+class Termination_CommitTableWidget extends StatefulWidget {
+  const Termination_CommitTableWidget({Key? key}) : super(key: key);
 
   @override
-  State<Post_CommitTableWidget> createState() => _Post_CommitTableWidgetState();
+  State<Termination_CommitTableWidget> createState() =>
+      _Termination_CommitTableWidgetState();
 }
 
-class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
+class _Termination_CommitTableWidgetState
+    extends State<Termination_CommitTableWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,7 +38,7 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                 width: 1,
               ),
             ),
-            child: Consumer<PostNotiProvider>(
+            child: Consumer<TerminationNotiProvier>(
               builder: (context, provider, child) => ListView.builder(
                 controller: ScrollController(),
                 itemCount: provider.notifies.length,
@@ -63,12 +62,17 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                           ),
                           Text(provider.notifies[index].member.name,
                               style: Constants.itemTextStyle),
-                          Text(provider.notifies[index].sender,
+                          Text(provider.notifies[index].moveInType,
                               style: Constants.itemTextStyle),
                           Text(
-                            provider.notifies[index].postCount,
+                            provider.notifies[index].date,
                             style: Constants.itemTextStyle,
-                          )
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                provider.deleteNoti(index);
+                              },
+                              child: Text("삭제"))
                         ],
                       ),
                     ),
@@ -95,7 +99,7 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                     maximumSize: const Size(200, 50),
                   ),
                   onPressed: () {
-                    Provider.of<PostNotiProvider>(context, listen: false)
+                    Provider.of<TerminationNotiProvier>(context, listen: false)
                         .commit();
                   },
                   child: Text("구글시트 다운로드")),

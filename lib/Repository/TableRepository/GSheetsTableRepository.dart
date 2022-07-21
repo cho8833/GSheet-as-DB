@@ -9,14 +9,13 @@ class GSheetsTableRepository implements TableRepository {
   Future<Spreadsheet>? _spreadsheet;
 
   Future<Spreadsheet> get spreadsheet {
-    _spreadsheet ??=
-        GSheetsAPIConfig.gSheet.createSpreadsheet("generatedSheet");
+    _spreadsheet = GSheetsAPIConfig.gSheet.createSpreadsheet("generatedSheet");
 
     return _spreadsheet!;
   }
 
   @override
-  Future<bool> appendData(List notifies) async {
+  Future<String?> appendData(List notifies) async {
     final Spreadsheet spreadsheet = await this.spreadsheet.catchError((_) {
       _spreadsheet = null;
       return this.spreadsheet;

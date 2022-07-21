@@ -10,7 +10,7 @@ class GSheet {
   Future<AutoRefreshingAuthClient>? _client;
 
   Future<AutoRefreshingAuthClient> get client {
-    _client = GSheet_auth.obtainCredentials(client: _client) as Future<AutoRefreshingAuthClient>?;
+    _client = GSheet_auth.obtainCredentials(client: _client);
 
     return _client!;
   }
@@ -33,8 +33,12 @@ class GSheet {
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$spreadsheetID');
     return client.get(uri).then((value) {
-      // check response
-      return Spreadsheet.fromJson(json: jsonDecode(value.body), client: client);
+      if (checkResponse(value)) {
+        return Spreadsheet.fromJson(
+            json: jsonDecode(value.body), client: client);
+      } else {
+        return Future.error(Exception('No spreadsheet'));
+      }
     });
   }
 

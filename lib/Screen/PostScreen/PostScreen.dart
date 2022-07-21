@@ -16,23 +16,20 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     
-    return ChangeNotifierProvider(
-      create: (_) => PostNotiProvider(),
-      child: Scaffold(
-        body: Row(
-          children: const [
-            Flexible(
-              flex: 5,
-              fit: FlexFit.tight,
-              child: Post_InputDataWidget()
-            ),
-            Flexible(
-              flex: 4,
-              fit: FlexFit.tight,
-              child: Post_CommitTableWidget()
-            ),
-          ],
-        ),
+    return Scaffold(
+      body: Row(
+        children: const [
+          Flexible(
+            flex: 5,
+            fit: FlexFit.tight,
+            child: Post_InputDataWidget()
+          ),
+          Flexible(
+            flex: 4,
+            fit: FlexFit.tight,
+            child: Post_CommitTableWidget()
+          ),
+        ],
       ),
     );
   }

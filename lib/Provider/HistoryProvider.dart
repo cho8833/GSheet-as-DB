@@ -14,7 +14,7 @@ class HistoryProvider extends ChangeNotifier {
     notifyListeners();
 
     _repository.appendData([history]).then((result) {
-      if (result) {
+      if (result != null) {
         status = Status.successed;
         notifyListeners();
       } else {

@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:test_application/Constants/Constants.dart';
 import 'package:test_application/Provider/HistoryProvider.dart';
 import 'package:test_application/Provider/MemberProvider.dart';
-import 'package:test_application/Provider/StatusProvider.dart';
+import 'package:test_application/Provider/PostNotiProvider.dart';
+import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import 'package:test_application/Screen/PostScreen/PostScreen.dart';
+import 'package:test_application/Screen/TerminationScreen/TerminationScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
       home: MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => MemberProvider()),
+        ChangeNotifierProvider(create: (_) => TerminationNotiProvier()),
+        ChangeNotifierProvider(create: (_) => PostNotiProvider())
       ], child: const MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
@@ -37,31 +41,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int color = 0;
-
+  int _selectedIndex = 0;
+  static const List<Widget> screens = <Widget>[
+    PostScreen(),
+    TerminationScreen()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("패스파인더 알림톡"),
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => StatusProvider(),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Flexible(
-                flex: 9,
-                child: PostScreen(),
-              )
-            ]),
-      ),
+      body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              flex: 9,
+              child: screens.elementAt(_selectedIndex),
+            )
+          ]),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.amber[800],
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        currentIndex: _selectedIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.mail),
-            
             label: Constants.postButtonTitle,
+
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.schedule),

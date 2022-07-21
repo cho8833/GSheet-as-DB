@@ -15,7 +15,7 @@ class GSheetsHistoryRepository implements HistoryRepository {
   }
 
   @override
-  Future<bool> appendData(List<History> histories) async {
+  Future<String?> appendData(List<History> histories) async {
     final Spreadsheet spreadsheet = await this.spreadsheet.catchError((_) {
       _spreadsheet = null;
       return this.spreadsheet;
@@ -27,7 +27,7 @@ class GSheetsHistoryRepository implements HistoryRepository {
       return worksheet.appendRow(data);
     } else {
       return Future(
-        () => false,
+        () => null,
       );
     }
   }

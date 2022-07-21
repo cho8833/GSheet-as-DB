@@ -85,7 +85,7 @@ class Worksheet {
     });
   }
 
-  Future<bool> appendRow(List<List<String>> values) async {
+  Future<String?> appendRow(List<List<String>> values) async {
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
@@ -211,10 +211,10 @@ class SheetData {
   }
 }
 
-bool checkResponse(Response response) {
+String? checkResponse(Response response) {
   if (response.statusCode == 200) {
-    return true;
+    return jsonDecode(response.body)["spreadsheetId"];
   } else {
-    return false;
+    return null;
   }
 }

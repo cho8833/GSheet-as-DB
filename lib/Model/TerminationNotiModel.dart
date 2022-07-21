@@ -14,4 +14,11 @@ class TerminationNoti {
       noti.date
     ];
   }
+
+  factory TerminationNoti.clone(TerminationNoti data) {
+    return TerminationNoti(
+        member: Member.clone(data.member),
+        moveInType: data.moveInType,
+        date: data.date);
+  }
 }
