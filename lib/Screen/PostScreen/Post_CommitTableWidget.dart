@@ -56,17 +56,23 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            provider.notifies[index].member.phoneNumber,
-                            style: Constants.itemTextStyle,
+                          Flexible(
+                            child: Text(
+                              provider.notifies[index].member.phoneNumber,
+                              style: Constants.itemTextStyle,
+                            ),
                           ),
-                          Text(provider.notifies[index].member.name,
-                              style: Constants.itemTextStyle),
-                          Text(provider.notifies[index].sender,
-                              style: Constants.itemTextStyle),
-                          Text(
-                            provider.notifies[index].postCount,
-                            style: Constants.itemTextStyle,
+                          Flexible(
+                            child: Text(provider.notifies[index].member.name,
+                                style: Constants.itemTextStyle),
+                          ),
+                          Flexible(
+                            child: Text(provider.notifies[index].sender,
+                                style: Constants.itemTextStyle),
+                          ),
+                          Flexible(
+                            child: Text(provider.notifies[index].postCount,
+                                style: Constants.itemTextStyle),
                           ),
                           ElevatedButton(
                               onPressed: () {

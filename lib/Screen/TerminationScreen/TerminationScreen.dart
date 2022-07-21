@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import 'package:test_application/Screen/TerminationScreen/Termination_CommitTableWidget.dart';
 import 'package:test_application/Screen/TerminationScreen/Termination_InputDataWidget.dart';
 import '../../Provider/PostNotiProvider.dart';
@@ -15,7 +16,7 @@ class _TerminationScreenState extends State<TerminationScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PostNotiProvider(),
+      create: (_) => TerminationNotiProvier(),
       child: Scaffold(
         body: Row(
           children: const [

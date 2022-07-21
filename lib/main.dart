@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
-        ChangeNotifierProvider(create: (_) => TerminationNotiProvier()),
         ChangeNotifierProvider(create: (_) => MemberProvider()),
       ], child: const MyHomePage(title: 'Flutter Demo Home Page')),
     );

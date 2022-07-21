@@ -72,14 +72,18 @@ class _Termination_InputDataWidgetState
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          provider.queriedMemberList[index]
-                                              .phoneNumber,
-                                          style: Constants.itemTextStyle),
-                                      Text(
-                                          provider
-                                              .queriedMemberList[index].name,
-                                          style: Constants.itemTextStyle),
+                                      Flexible(
+                                        child: Text(
+                                            provider
+                                                .queriedMemberList[index].name,
+                                            style: Constants.itemTextStyle),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                            provider.queriedMemberList[index]
+                                                .phoneNumber,
+                                            style: Constants.itemTextStyle),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -95,15 +99,23 @@ class _Termination_InputDataWidgetState
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                alignment: Alignment(0.0, 0.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.orange,
+                    color: Colors.red,
                     width: 1,
                   ),
                 ),
-                child:
-                    Text(inputData.member.name + inputData.member.phoneNumber),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      inputData.member.name,
+                      style: Constants.itemTextStyle,
+                    ),
+                    Text(inputData.member.phoneNumber,
+                        style: Constants.itemTextStyle),
+                  ],
+                ),
               ),
             ),
             Flexible(

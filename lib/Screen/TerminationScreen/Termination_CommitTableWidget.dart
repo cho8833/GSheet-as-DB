@@ -56,17 +56,29 @@ class _Termination_CommitTableWidgetState
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            provider.notifies[index].member.phoneNumber,
-                            style: Constants.itemTextStyle,
+                          Flexible(
+                            child: Text(
+                              provider.notifies[index].member.phoneNumber,
+                              style: Constants.itemTextStyle,
+                            ),
                           ),
-                          Text(provider.notifies[index].member.name,
-                              style: Constants.itemTextStyle),
-                          Text(provider.notifies[index].moveInType,
-                              style: Constants.itemTextStyle),
-                          Text(
-                            provider.notifies[index].date,
-                            style: Constants.itemTextStyle,
+                          Flexible(
+                            child: Text(
+                              provider.notifies[index].member.name,
+                              style: Constants.itemTextStyle,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
+                              provider.notifies[index].moveInType,
+                              style: Constants.itemTextStyle,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
+                              provider.notifies[index].date,
+                              style: Constants.itemTextStyle,
+                            ),
                           ),
                           ElevatedButton(
                               onPressed: () {
