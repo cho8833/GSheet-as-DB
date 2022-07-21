@@ -67,19 +67,23 @@ class _Termination_InputDataWidgetState
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          provider.queriedMemberList[index]
-                                              .phoneNumber,
-                                          style: Constants.itemTextStyle),
-                                      Text(
-                                          provider
-                                              .queriedMemberList[index].name,
-                                          style: Constants.itemTextStyle),
+                                      Flexible(
+                                        child: Text(
+                                            provider
+                                                .queriedMemberList[index].name,
+                                            style: Constants.itemTextStyle),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                            provider.queriedMemberList[index]
+                                                .phoneNumber,
+                                            style: Constants.itemTextStyle),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -95,15 +99,28 @@ class _Termination_InputDataWidgetState
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                alignment: Alignment(0.0, 0.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.orange,
-                    width: 1,
+                  alignment: const Alignment(0.0, 0.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.orange,
+                      width: 1,
+                    ),
                   ),
-                ),
-                child:
-                    Text(inputData.member.name + inputData.member.phoneNumber),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(
+                    child: Text(
+                      inputData.member.name,
+                      style: Constants.itemTextStyle,
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(inputData.member.phoneNumber,
+                        style: Constants.itemTextStyle),
+                  ),
+                ],
+              ),
               ),
             ),
             Flexible(
@@ -122,7 +139,7 @@ class _Termination_InputDataWidgetState
                         inputData.moveInType = value;
                       },
                       controller: senderTextController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: "입주유형"))),
             ),
             Flexible(
@@ -141,7 +158,7 @@ class _Termination_InputDataWidgetState
                         inputData.date = value;
                       },
                       controller: countTextController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "계약종료_월/일"))),
             ),

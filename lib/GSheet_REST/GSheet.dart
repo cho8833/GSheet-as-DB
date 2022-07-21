@@ -62,6 +62,20 @@ class GSheet {
       }
     });
   }
+
+  Future<bool> deleteSpreadsheet(String spreadsheetId) async {
+    final client = await this.client.catchError((_) {
+      _client = null;
+      return this.client;
+    });
+    Uri uri = Uri(
+        scheme: 'https',
+        host: 'www.googleapis.com',
+        path: '/drive/v3/files/$spreadsheetId');
+    return client.delete(uri).then((response) {
+      return checkResponse(response);
+    });
+  }
 }
 
 bool checkResponse(Response response) {

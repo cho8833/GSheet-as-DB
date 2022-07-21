@@ -12,8 +12,7 @@ class PostNotiProvider extends ChangeNotifier {
 
   void addNoti(PostNoti noti) {
     _notifies.add(noti);
-    _notifies.forEach((element) {
-    });
+    _notifies.forEach((element) {});
     notifyListeners();
   }
 

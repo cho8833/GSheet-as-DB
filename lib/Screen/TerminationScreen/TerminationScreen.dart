@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import 'package:test_application/Screen/TerminationScreen/Termination_CommitTableWidget.dart';
 import 'package:test_application/Screen/TerminationScreen/Termination_InputDataWidget.dart';
 

@@ -1,9 +1,8 @@
+import 'package:test_application/Constants/GSheetsAPIConfig.dart';
 import 'package:test_application/GSheet_REST/Spreadsheet.dart';
 import 'package:test_application/Model/PostNotiModel.dart';
 import 'package:test_application/Model/TerminationNotiModel.dart';
 import 'package:test_application/Repository/TableRepository/TableRepository.dart';
-
-import '../../Constants/GsheetsAPIConfig.dart';
 
 class GSheetsTableRepository implements TableRepository {
   Future<Spreadsheet>? _spreadsheet;
@@ -21,6 +20,21 @@ class GSheetsTableRepository implements TableRepository {
       return this.spreadsheet;
     });
     return spreadsheet.getSheetsByIndex(0)!.appendRow(generateFormat(notifies));
+  }
+
+  Future<bool> deleteSheet() async {
+    if (_spreadsheet != null) {
+      return _spreadsheet!.then((spreadsheet) =>
+        GSheetsAPIConfig.gSheet
+            .deleteSpreadsheet(spreadsheet.spreadsheetId)
+            .then((isSuccess) {
+          return isSuccess;
+        })
+      );
+    } 
+    else {
+      return Future.error(Exception('failed deleting spreadsheet'));
+    }
   }
 
   List<List<String>> generateFormat(List notifies) {

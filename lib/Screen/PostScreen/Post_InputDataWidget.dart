@@ -7,16 +7,21 @@ import 'package:test_application/Provider/PostNotiProvider.dart';
 
 import '../../Model/MemberModel.dart';
 
-class Post_InputDataWidget extends StatelessWidget {
+class Post_InputDataWidget extends StatefulWidget {
   const Post_InputDataWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController senderTextController = TextEditingController();
-    TextEditingController countTextController = TextEditingController();
-    PostNoti inputData = PostNoti(
-        member: Member(phoneNumber: '', name: ''), postCount: "", sender: "");
+  State<Post_InputDataWidget> createState() => _Post_InputDataWidgetState();
+}
 
+class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
+  TextEditingController senderTextController = TextEditingController();
+  TextEditingController countTextController = TextEditingController();
+
+  PostNoti inputData = PostNoti(
+      member: Member(phoneNumber: '', name: ''), postCount: "", sender: "");
+  @override
+  Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.only(right: 10),
         child: Column(
@@ -38,22 +43,25 @@ class Post_InputDataWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: Consumer<MemberProvider>(
-                      builder: (context, provider, child) => ListView.builder(
+                      builder: (__, provider, aa) => ListView.builder(
                           controller: ScrollController(),
+                          
                           itemCount: provider.queriedMemberList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: Colors.orange,
+                                  color: Colors.red,
                                   width: 1,
                                 ),
                               ),
                               height: 60,
                               child: TextButton(
                                 onPressed: () {
-                                  inputData.member =
-                                      provider.queriedMemberList[index];
+                                  setState(() {
+                                    inputData.member =
+                                        provider.queriedMemberList[index];
+                                  });
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -61,14 +69,18 @@ class Post_InputDataWidget extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          provider.queriedMemberList[index]
-                                              .phoneNumber,
-                                          style: Constants.itemTextStyle),
-                                      Text(
-                                          provider
-                                              .queriedMemberList[index].name,
-                                          style: Constants.itemTextStyle),
+                                      Flexible(
+                                        child: Text(
+                                            provider
+                                                .queriedMemberList[index].name,
+                                            style: Constants.itemTextStyle),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                            provider.queriedMemberList[index]
+                                                .phoneNumber,
+                                            style: Constants.itemTextStyle),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -87,11 +99,25 @@ class Post_InputDataWidget extends StatelessWidget {
                 alignment: const Alignment(0.0, 0.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.orange,
+                    color: Colors.red,
                     width: 1,
                   ),
                 ),
-                child: Text(""),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        inputData.member.name,
+                        style: Constants.itemTextStyle,
+                      ),
+                    ),
+                    Flexible(
+                      child: Text(inputData.member.phoneNumber,
+                          style: Constants.itemTextStyle),
+                    ),
+                  ],
+                ),
               ),
             ),
             Flexible(
@@ -149,7 +175,8 @@ class Post_InputDataWidget extends StatelessWidget {
                     maximumSize: const Size(200, 50),
                   ),
                   onPressed: () {
-                    Provider.of<PostNotiProvider>(context,listen: false).addNoti(PostNoti.clone(inputData));
+                    Provider.of<PostNotiProvider>(context, listen: false)
+                        .addNoti(PostNoti.clone(inputData));
                   },
                   child: const Text("등록하기"),
                 ),
