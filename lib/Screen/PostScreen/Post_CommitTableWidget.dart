@@ -67,7 +67,12 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                           Text(
                             provider.notifies[index].postCount,
                             style: Constants.itemTextStyle,
-                          )
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                provider.deleteNoti(index);
+                              },
+                              child: Text("삭제"))
                         ],
                       ),
                     ),

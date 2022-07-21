@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => TerminationNotiProvier()),
         ChangeNotifierProvider(create: (_) => MemberProvider()),
       ], child: const MyHomePage(title: 'Flutter Demo Home Page')),
     );
@@ -40,16 +41,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int color = 0;
-
+  List<dynamic> Screen = [PostScreen(), TerminationScreen()];
+  int whatS = 0;
+  int bottomIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("패스파인더 알림톡"),
       ),
-      body: TerminationScreen(),
+      body: Screen[whatS],
       bottomNavigationBar: BottomNavigationBar(
+        onTap: ChangeScreen,
+        currentIndex: bottomIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.mail),
@@ -62,5 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  void ChangeScreen(int index) {
+    setState(() {
+      whatS = index;
+      bottomIndex = index;
+    });
   }
 }

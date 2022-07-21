@@ -67,7 +67,12 @@ class _Termination_CommitTableWidgetState
                           Text(
                             provider.notifies[index].date,
                             style: Constants.itemTextStyle,
-                          )
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                provider.deleteNoti(index);
+                              },
+                              child: Text("삭제"))
                         ],
                       ),
                     ),
