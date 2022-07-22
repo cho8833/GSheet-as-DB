@@ -1,18 +1,22 @@
+import 'package:test_application/Model/NotifyModel.dart';
+
 import 'MemberModel.dart';
 
-class PostNoti {
+class PostNoti extends NotifyModel {
   Member member;
   String postCount;
   String sender;
 
   PostNoti(
       {required this.member, required this.postCount, required this.sender});
-  static List<String> toRow(PostNoti noti) {
+
+  @override
+  List<String> toRow() {
     return [
-      noti.member.phoneNumber,
-      noti.member.name,
-      noti.sender,
-      noti.postCount
+      member.phoneNumber,
+      member.name,
+      sender,
+      postCount
     ];
   }
 

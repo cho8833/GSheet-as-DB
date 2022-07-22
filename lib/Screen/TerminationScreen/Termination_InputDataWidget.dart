@@ -5,7 +5,6 @@ import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import '../../Constants/Constants.dart';
 import '../../Model/MemberModel.dart';
 
-import '../../Model/PostNotiModel.dart';
 import '../../Provider/MemberProvider.dart';
 
 class Termination_InputDataWidget extends StatefulWidget {

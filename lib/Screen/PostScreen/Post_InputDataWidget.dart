@@ -4,7 +4,6 @@ import 'package:test_application/Constants/Constants.dart';
 import 'package:test_application/Model/PostNotiModel.dart';
 import 'package:test_application/Provider/MemberProvider.dart';
 import 'package:test_application/Provider/PostNotiProvider.dart';
-
 import '../../Model/MemberModel.dart';
 
 class Post_InputDataWidget extends StatefulWidget {
@@ -42,21 +41,15 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                             border: OutlineInputBorder(), labelText: '이름 검색')),
                   ),
                   Expanded(
-                    child: Consumer<MemberProvider>(
-                      builder: (__, provider, aa) => ListView.builder(
-                          controller: ScrollController(),
-                          
-                          itemCount: provider.queriedMemberList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.red,
-                                  width: 1,
-                                ),
-                              ),
-                              height: 60,
-                              child: TextButton(
+                    child: Container(
+                      
+                      child: Consumer<MemberProvider>(
+                        builder: (__, provider, aa) => ListView.builder(
+                            controller: ScrollController(),
+                            itemCount: provider.queriedMemberList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              
+                              return TextButton(
                                 onPressed: () {
                                   setState(() {
                                     inputData.member =
@@ -64,7 +57,8 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                                   });
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -84,9 +78,10 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                                     ],
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
+                              );
+                            }
+                          ),
+                      ),
                     ),
                   )
                 ],

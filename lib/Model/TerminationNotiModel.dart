@@ -1,17 +1,21 @@
+import 'package:test_application/Model/NotifyModel.dart';
+
 import 'MemberModel.dart';
 
-class TerminationNoti {
+class TerminationNoti extends NotifyModel {
   Member member;
   String moveInType;
   String date;
   TerminationNoti(
       {required this.member, required this.moveInType, required this.date});
-  static List<String> toRow(TerminationNoti noti) {
+
+  @override
+  List<String> toRow() {
     return [
-      noti.member.phoneNumber,
-      noti.member.name,
-      noti.moveInType,
-      noti.date
+      member.phoneNumber,
+      member.name,
+      moveInType,
+      date
     ];
   }
 

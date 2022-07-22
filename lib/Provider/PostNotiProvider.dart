@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_application/Repository/TableRepository/GSheetsTableRepository.dart';
 import 'package:test_application/Repository/TableRepository/TableRepository.dart';
+import 'package:test_application/util/Util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../Constants/Constants.dart';
 import '../Model/PostNotiModel.dart';
 
 class PostNotiProvider extends ChangeNotifier {
@@ -12,7 +11,6 @@ class PostNotiProvider extends ChangeNotifier {
 
   void addNoti(PostNoti noti) {
     _notifies.add(noti);
-    _notifies.forEach((element) {});
     notifyListeners();
   }
 
@@ -26,9 +24,13 @@ class PostNotiProvider extends ChangeNotifier {
   void commit() {
     _repository.appendData(_notifies).then((spreadsheetId) async {
       if (spreadsheetId != null) {
-        String url = Constants.generateSheetDownloadUrl(spreadsheetId);
+        String url = Util.generateSheetDownloadUrl(spreadsheetId);
         if (await canLaunchUrlString(url)) {
-          launchUrlString(url);
+          launchUrlString(url).then((isSuccess) {
+            if (isSuccess) {
+              _repository.appendDataToHistory(notifies);
+            }
+          });
         }
       }
       notifyListeners();
