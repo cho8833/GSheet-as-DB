@@ -93,7 +93,7 @@ class Worksheet {
         queryParameters: {'valueInputOption': "RAW"});
     Map<String, dynamic> request = <String, dynamic>{};
     request['values'] = values;
-    print(jsonEncode(request));
+
     return client.post(uri, body: jsonEncode(request)).then((response) {
       return checkResponse(response);
     });

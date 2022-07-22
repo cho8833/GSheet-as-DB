@@ -3,6 +3,7 @@ import 'package:test_application/GSheet_REST/Spreadsheet.dart';
 import 'package:test_application/Model/PostNotiModel.dart';
 import 'package:test_application/Model/TerminationNotiModel.dart';
 import 'package:test_application/Repository/TableRepository/TableRepository.dart';
+import 'package:test_application/util/Util.dart';
 
 import '../../Model/NotifyModel.dart';
 
@@ -11,7 +12,7 @@ class GSheetsTableRepository implements TableRepository {
   Future<Spreadsheet>? _historySpreadsheet;
 
   Future<Spreadsheet> get spreadsheet {
-    _spreadsheet = GSheetsAPIConfig.gSheet.createSpreadsheet("generatedSheet");
+    _spreadsheet = GSheetsAPIConfig.gSheet.createSpreadsheet(Util.getDate());
 
     return _spreadsheet!;
   }

@@ -22,7 +22,7 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
         child: Column(
           children: [
             Flexible(
@@ -31,42 +31,74 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    child: TextField(
-                        onChanged: (value) {
-                          Provider.of<MemberProvider>(context, listen: false)
-                              .queryByName(value);
-                        },
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(), labelText: '이름 검색')),
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 20, right: 10, left: 10),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        Provider.of<MemberProvider>(context, listen: false)
+                            .queryByName(value);
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "입주자 정보 검색",
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(
+                          Icons.search,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 60, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Name",
+                          style: Constants.itemTextStyle,
+                        ),
+                        Text(
+                          "Phone",
+                          style: Constants.itemTextStyle,
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: Container(
-                      
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: Colors.black),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                       child: Consumer<MemberProvider>(
                         builder: (__, provider, aa) => ListView.builder(
                             controller: ScrollController(),
                             itemCount: provider.queriedMemberList.length,
                             itemBuilder: (BuildContext context, int index) {
-                              
-                              return TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    inputData.member =
-                                        provider.queriedMemberList[index];
-                                  });
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              return Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1,
+                                  ),
+                                ),
+                                height: 60,
+                                child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      inputData.member =
+                                          provider.queriedMemberList[index];
+                                    });
+                                  },
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Text(
-                                            provider
-                                                .queriedMemberList[index].name,
+                                            provider.queriedMemberList[index]
+                                                .name,
                                             style: Constants.itemTextStyle),
                                       ),
                                       Flexible(
@@ -79,8 +111,7 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                                   ),
                                 ),
                               );
-                            }
-                          ),
+                            }),
                       ),
                     ),
                   )
@@ -91,24 +122,25 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                alignment: const Alignment(0.0, 0.0),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.red,
-                    width: 1,
+                  color: Colors.grey[300],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
                   ),
                 ),
+                margin: EdgeInsets.fromLTRB(10, 0, 5, 10),
+                alignment: const Alignment(0.0, 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Flexible(
                       child: Text(
-                        inputData.member.name,
+                        "Name: " + inputData.member.name,
                         style: Constants.itemTextStyle,
                       ),
                     ),
                     Flexible(
-                      child: Text(inputData.member.phoneNumber,
+                      child: Text("Phone: " + inputData.member.phoneNumber,
                           style: Constants.itemTextStyle),
                     ),
                   ],
@@ -119,13 +151,8 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
+                  margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                   alignment: const Alignment(0.0, 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 1,
-                    ),
-                  ),
                   child: TextField(
                       onChanged: (value) {
                         inputData.sender = value;
@@ -138,13 +165,8 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                  alignment: const Alignment(0.0, 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 1,
-                    ),
-                  ),
+                  margin: const EdgeInsets.fromLTRB(10, 0, 5, 10),
+                  
                   child: TextField(
                       onChanged: (value) {
                         inputData.postCount = value;
@@ -158,16 +180,10 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               fit: FlexFit.tight,
               child: Container(
                 alignment: const Alignment(0.0, 0.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.orange,
-                    width: 1,
-                  ),
-                ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(100, 50),
-                    maximumSize: const Size(200, 50),
+                    minimumSize: const Size(300, 80),
+                    maximumSize: const Size(500, 120),
                   ),
                   onPressed: () {
                     Provider.of<PostNotiProvider>(context, listen: false)

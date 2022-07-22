@@ -5,7 +5,6 @@ import 'package:test_application/Repository/TableRepository/TableRepository.dart
 import 'package:test_application/util/Util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-
 class TerminationNotiProvier extends ChangeNotifier {
   final TableRepository _repository = GSheetsTableRepository();
   List<TerminationNoti> notifies = [];
@@ -25,7 +24,11 @@ class TerminationNotiProvier extends ChangeNotifier {
       if (spreadsheetId != null) {
         String url = Util.generateSheetDownloadUrl(spreadsheetId);
         if (await canLaunchUrlString(url)) {
-          launchUrlString(url);
+          launchUrlString(url).then((isSuccess) {
+            if (isSuccess) {
+              _repository.appendDataToHistory(notifies);
+            }
+          });
         }
       }
       notifyListeners();
