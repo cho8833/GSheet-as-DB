@@ -10,7 +10,7 @@ class GSheet {
   Future<AutoRefreshingAuthClient>? _client;
 
   Future<AutoRefreshingAuthClient> get client {
-    _client = GSheet_auth.obtainCredentials(client: _client);
+    _client = GSheet_auth.auth(client: _client);
 
     return _client!;
   }

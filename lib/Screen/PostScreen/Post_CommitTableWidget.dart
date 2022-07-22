@@ -24,21 +24,36 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
           fit: FlexFit.tight,
           child: Center(
             child: Text(
-              "OutPut",
+              "구글시트 미리보기",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "Name",
+              style: Constants.itemTextStyle,
+            ),
+            Text(
+              "Phone",
+              style: Constants.itemTextStyle,
+            ),
+            Text(
+              "From",
+              style: Constants.itemTextStyle,
+            ),
+            Text(
+              "Count",
+              style: Constants.itemTextStyle,
+            ),
+          ],
         ),
         Flexible(
           flex: 7,
           fit: FlexFit.tight,
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.orange,
-                width: 1,
-              ),
-            ),
             child: Consumer<PostNotiProvider>(
               builder: (context, provider, child) => ListView.builder(
                 controller: ScrollController(),
@@ -93,23 +108,49 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
           flex: 3,
           fit: FlexFit.tight,
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.orange,
-                width: 1,
-              ),
-            ),
-            child: Center(
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(100, 50),
-                    maximumSize: const Size(200, 50),
-                  ),
-                  onPressed: () {
-                    Provider.of<PostNotiProvider>(context, listen: false)
-                        .commit();
-                  },
-                  child: Text("구글시트 다운로드")),
+            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(300, 80),
+                        maximumSize: const Size(500, 100),
+                      ),
+                      onPressed: () {
+                        Provider.of<PostNotiProvider>(context, listen: false)
+                            .commit();
+                      },
+                      child: Text("구글시트 다운로드")),
+                ),
+              ],
             ),
           ),
         ),

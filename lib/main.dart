@@ -52,14 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("패스파인더 알림톡"),
       ),
-      body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              flex: 9,
-              child: screens.elementAt(_selectedIndex),
-            )
-          ]),
+      body: Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Flexible(
+          flex: 9,
+          child: screens.elementAt(_selectedIndex),
+        )
+      ]),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.amber[800],
         onTap: (index) {
@@ -72,7 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.mail),
             label: Constants.postButtonTitle,
-
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.schedule),
