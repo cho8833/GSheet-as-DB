@@ -247,7 +247,6 @@ class SheetData {
 
 bool checkResponse(Response response) {
   if (response.statusCode == 200) {
-    print(response.body);
     return true;
   } else {
     return false;

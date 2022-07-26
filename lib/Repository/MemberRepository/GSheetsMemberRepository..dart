@@ -46,7 +46,7 @@ class GSheetsMemberRepository implements MemberRepository {
         "C6:C$columnRange",
         "D6:D$columnRange",
         "M6:M$columnRange",
-        "G6:6$columnRange"
+        "G6:G$columnRange"
       ]).then((datas) {
         List<Member> result = [];
         for (int i = 0; i < datas[0].values.length; i++) {

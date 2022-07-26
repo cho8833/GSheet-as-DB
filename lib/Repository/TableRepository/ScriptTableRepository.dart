@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:test_application/Constants/GSheetsAPIConfig.dart';
+
 class ScriptRepository {
   final String scriptId =
       "AKfycbyJqzlfabAau0MTC6PsPWDrjX_jVmqgedE5ou7n7Ig3Ng0_rQcyjFGzPIPxJqHzFoYM";
@@ -23,14 +24,13 @@ class ScriptRepository {
       if (checkResponse(response)) {
         Map<String, dynamic> result = jsonDecode(response.body);
         return result['response']['result'];
-      } 
-      else {
+      } else {
         return Future.error(Exception('error executing Post Process'));
       }
     });
   }
 
-  Future<String?> excuteExireProcess(List<List<String>> values) async {
+  Future<String?> executeExpireProcess(List<List<String>> values) async {
     Uri uri = Uri(
         scheme: 'https',
         host: 'script.googleapis.com',

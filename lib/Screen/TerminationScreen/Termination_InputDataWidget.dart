@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_application/Constants/GSheetsAPIConfig.dart';
 import 'package:test_application/Model/TerminationNotiModel.dart';
 import 'package:test_application/Provider/TerminationNotiProvider.dart';
 import '../../Constants/Constants.dart';
@@ -20,7 +21,8 @@ class _Termination_InputDataWidgetState
   final TextEditingController _dateTextController = TextEditingController();
   final TextEditingController _typeTextController = TextEditingController();
   final TextEditingController _nameTextController = TextEditingController();
-  final TextEditingController _phoneNumberTextController = TextEditingController();
+  final TextEditingController _phoneNumberTextController =
+      TextEditingController();
   TerminationNoti inputData = TerminationNoti(
       member:
           Member(phoneNumber: '', name: '', expireDate: "", moveInType: ""));
@@ -76,53 +78,61 @@ class _Termination_InputDataWidgetState
                         border: Border.all(width: 1, color: Colors.black),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: Consumer<MemberProvider>(
-                        builder: (__, provider, aa) => ListView.separated(
-                            controller: ScrollController(),
-                            itemCount: provider.queriedMemberList.length,
-                            separatorBuilder: (context, index) => const Divider(
-                                  thickness: 1,
-                                ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return SizedBox(
-                                height: 50,
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      inputData.member =
-                                          provider.queriedMemberList[index];
-                                      _phoneNumberTextController.text =
-                                          inputData.member.phoneNumber;
-                                      _nameTextController.text =
-                                          inputData.member.name;
-                                      _typeTextController.text =
-                                          inputData.member.moveInType;
-                                      _dateTextController.text =
-                                          inputData.member.expireDate;
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                            provider
-                                                .queriedMemberList[index].name,
-                                            style: Constants.itemTextStyle),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                            provider.queriedMemberList[index]
-                                                .phoneNumber,
-                                            style: Constants.itemTextStyle),
-                                      ),
-                                    ],
+                      child:
+                          Consumer<MemberProvider>(builder: (__, provider, aa) {
+                        if (provider.status == Status.failed) {
+                          return const Center(child: Text("connection failed"));
+                        } else if (provider.status == Status.loading) {
+                          return const Center(child: Text("loading"));
+                        } else {
+                          return ListView.separated(
+                              controller: ScrollController(),
+                              itemCount: provider.queriedMemberList.length,
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
+                                    thickness: 1,
                                   ),
-                                ),
-                              );
-                            }),
-                      ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return SizedBox(
+                                  height: 50,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        inputData.member =
+                                            provider.queriedMemberList[index];
+                                        _phoneNumberTextController.text =
+                                            inputData.member.phoneNumber;
+                                        _nameTextController.text =
+                                            inputData.member.name;
+                                        _typeTextController.text =
+                                            inputData.member.moveInType;
+                                        _dateTextController.text =
+                                            inputData.member.expireDate;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                              provider.queriedMemberList[index]
+                                                  .name,
+                                              style: Constants.listTextStyle),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                              provider.queriedMemberList[index]
+                                                  .phoneNumber,
+                                              style: Constants.listTextStyle),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        }
+                      }),
                     ),
                   )
                 ],

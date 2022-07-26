@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_application/Constants/Constants.dart';
+import 'package:test_application/Constants/GSheetsAPIConfig.dart';
 import 'package:test_application/Model/PostNotiModel.dart';
 import 'package:test_application/Provider/MemberProvider.dart';
 import 'package:test_application/Provider/PostNotiProvider.dart';
@@ -69,51 +71,72 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                   ),
                   Expanded(
                     child: Container(
+                      width: double.infinity,
                       margin: const EdgeInsets.only(top: 10),
                       decoration: BoxDecoration(
                         border: Border.all(width: 1, color: Colors.black),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Consumer<MemberProvider>(
-                        builder: (__, provider, aa) => ListView.separated(
-                            controller: ScrollController(),
-                            itemCount: provider.queriedMemberList.length,
-                            separatorBuilder: (context, index) => const Divider(thickness: 1,),
-                            itemBuilder: (BuildContext context, int index) {
-                              return SizedBox(
-                                height: 50,
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      inputData.member =
-                                          provider.queriedMemberList[index];
-                                      _receiverTextController.text =
-                                          inputData.member.name;
-                                      _contentsTextController.text =
-                                          inputData.member.phoneNumber;
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                            provider
-                                                .queriedMemberList[index].name,
-                                            style: Constants.itemTextStyle),
+                        builder: (__, provider, aa) {
+                          if (provider.status == Status.failed) {
+                            return const Center(
+                                child: Text("connection failed"));
+                          } else if (provider.status == Status.loading) {
+                            return SpinKitRotatingPlain(
+                              itemBuilder: ((context, index) {
+                                return const DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue));
+                              }),
+                            );
+                          } else {
+                            return ListView.separated(
+                                controller: ScrollController(),
+                                itemCount: provider.queriedMemberList.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(
+                                      thickness: 1,
+                                    ),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return SizedBox(
+                                    height: 50,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          inputData.member =
+                                              provider.queriedMemberList[index];
+                                          _receiverTextController.text =
+                                              inputData.member.name;
+                                          _contentsTextController.text =
+                                              inputData.member.phoneNumber;
+                                        });
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                                provider
+                                                    .queriedMemberList[index]
+                                                    .name,
+                                                style: Constants.listTextStyle),
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                                provider
+                                                    .queriedMemberList[index]
+                                                    .phoneNumber,
+                                                style: Constants.listTextStyle),
+                                          ),
+                                        ],
                                       ),
-                                      Flexible(
-                                        child: Text(
-                                            provider.queriedMemberList[index]
-                                                .phoneNumber,
-                                            style: Constants.itemTextStyle),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+                                    ),
+                                  );
+                                });
+                          }
+                        },
                       ),
                     ),
                   )
@@ -128,7 +151,7 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                 alignment: const Alignment(0.0, 0.0),
                 child: Row(
                   children: [
-                    Flexible(    
+                    Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(right: 10),
                         child: TextFormField(
@@ -136,7 +159,6 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                             inputData.member.name = value;
                           },
                           controller: _receiverTextController,
-                          
                           decoration: const InputDecoration(
                             labelText: "우편물 수신인",
                             border: OutlineInputBorder(),
@@ -150,7 +172,6 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                           inputData.member.phoneNumber = value;
                         },
                         controller: _contentsTextController,
-                        
                         decoration: const InputDecoration(
                           labelText: "수신인 번호",
                           border: OutlineInputBorder(),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_application/Constants/Constants.dart';
+import 'package:test_application/Constants/GSheetsAPIConfig.dart';
 import 'package:test_application/Provider/PostNotiProvider.dart';
 
 
@@ -31,34 +33,45 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
           Container(
             padding: const EdgeInsets.only(left: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Flexible(
-                  flex: 1,
-                  child: Text(
-                    "Name",
-                    style: Constants.itemTextStyle,
+                  flex: 2,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Name",
+                      style: Constants.itemTextStyle,
+                    ),
                   ),
                 ),
                 Flexible(
-                  flex: 1,
-                  child: Text(
-                    "Phone",
-                    style: Constants.itemTextStyle,
+                  flex: 2,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Phone",
+                      style: Constants.itemTextStyle,
+                    ),
                   ),
                 ),
                 Flexible(
-                  flex: 1,
-                  child: Text(
-                    "From",
-                    style: Constants.itemTextStyle,
+                  flex: 2,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Sender",
+                      style: Constants.itemTextStyle,
+                    ),
                   ),
                 ),
                 Flexible(
-                  flex: 1,
-                  child: Text(
-                    "Contents",
-                    style: Constants.itemTextStyle,
+                  flex: 2,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Contents",
+                      style: Constants.itemTextStyle,
+                    ),
                   ),
                 ),
                 Flexible(flex: 1, child: Text(""))
@@ -89,26 +102,38 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
-                              flex: 1,
-                              child: Text(
-                                provider.notifies[index].member.name,
-                                style: Constants.itemTextStyle,
+                              flex: 2,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  provider.notifies[index].member.name,
+                                  style: Constants.listTextStyle,
+                                ),
                               ),
                             ),
                             Flexible(
-                              flex: 1,
-                              child: Text(provider.notifies[index].member.phoneNumber,
-                                  style: Constants.itemTextStyle),
+                              flex: 2,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(provider.notifies[index].member.phoneNumber,
+                                    style: Constants.listTextStyle),
+                              ),
                             ),
                             Flexible(
-                              flex: 1,
-                              child: Text(provider.notifies[index].sender,
-                                  style: Constants.itemTextStyle),
+                              flex: 2,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(provider.notifies[index].sender,
+                                    style: Constants.listTextStyle),
+                              ),
                             ),
                             Flexible(
-                              flex: 1,
-                              child: Text(provider.notifies[index].postCount,
-                                  style: Constants.itemTextStyle),
+                              flex: 2,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(provider.notifies[index].postCount,
+                                    style: Constants.listTextStyle),
+                              ),
                             ),
                             Flexible(
                               flex: 1,
@@ -134,18 +159,34 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
             flex: 3,
             fit: FlexFit.tight,
             child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Center(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(300, 80),
-                      maximumSize: const Size(500, 100),
-                    ),
-                    onPressed: () {
-                      Provider.of<PostNotiProvider>(context, listen: false)
-                          .commit();
-                    },
-                    child: const Text("구글시트 다운로드", style: TextStyle(fontWeight: FontWeight.bold),)),
+                child: Consumer<PostNotiProvider>(
+                    builder: ((__, provider, _) {
+                  if (provider.status == Status.loading) {
+                    return SpinKitRotatingPlain(
+                      itemBuilder: ((context, index) {
+                        return const DecoratedBox(
+                            decoration: BoxDecoration(color: Colors.blue));
+                      }),
+                    );
+                  } else {
+                    return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(300, 80),
+                          maximumSize: const Size(500, 100),
+                        ),
+                        onPressed: () {
+                          Provider.of<PostNotiProvider>(context,
+                                  listen: false)
+                              .commit();
+                        },
+                        child: const Text(
+                          "구글시트 다운로드",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ));
+                  }
+                })),
               ),
             ),
           ),
