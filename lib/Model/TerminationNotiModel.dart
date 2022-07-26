@@ -4,25 +4,23 @@ import 'MemberModel.dart';
 
 class TerminationNoti extends NotifyModel {
   Member member;
-  String moveInType;
-  String date;
+  
   TerminationNoti(
-      {required this.member, required this.moveInType, required this.date});
+      {required this.member});
 
   @override
   List<String> toRow() {
     return [
-      member.phoneNumber,
       member.name,
-      moveInType,
-      date
+      member.phoneNumber,
+      member.expireDate,
+      member.moveInType
     ];
   }
 
   factory TerminationNoti.clone(TerminationNoti data) {
     return TerminationNoti(
-        member: Member.clone(data.member),
-        moveInType: data.moveInType,
-        date: data.date);
+        member: Member.clone(data.member)
+    );
   }
 }

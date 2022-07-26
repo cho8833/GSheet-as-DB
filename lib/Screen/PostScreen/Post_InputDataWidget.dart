@@ -14,11 +14,13 @@ class Post_InputDataWidget extends StatefulWidget {
 }
 
 class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
-  TextEditingController senderTextController = TextEditingController();
-  TextEditingController countTextController = TextEditingController();
+  final TextEditingController _receiverTextController = TextEditingController();
+  final TextEditingController _contentsTextController = TextEditingController();
 
   PostNoti inputData = PostNoti(
-      member: Member(phoneNumber: '', name: ''), postCount: "", sender: "");
+      member: Member(phoneNumber: '', name: '', expireDate: "", moveInType: ""),
+      postCount: "",
+      sender: "");
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,19 +50,20 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 60, 0),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
                         Text(
-                          "Name",
+                          'Name',
                           style: Constants.itemTextStyle,
+                          textAlign: TextAlign.left,
                         ),
                         Text(
-                          "Phone",
+                          'Phone',
                           style: Constants.itemTextStyle,
-                        ),
+                          textAlign: TextAlign.right,
+                        )
                       ],
                     ),
                   ),
@@ -72,23 +75,22 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Consumer<MemberProvider>(
-                        builder: (__, provider, aa) => ListView.builder(
+                        builder: (__, provider, aa) => ListView.separated(
                             controller: ScrollController(),
                             itemCount: provider.queriedMemberList.length,
+                            separatorBuilder: (context, index) => const Divider(thickness: 1,),
                             itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                    width: 1,
-                                  ),
-                                ),
-                                height: 60,
+                              return SizedBox(
+                                height: 50,
                                 child: TextButton(
                                   onPressed: () {
                                     setState(() {
                                       inputData.member =
                                           provider.queriedMemberList[index];
+                                      _receiverTextController.text =
+                                          inputData.member.name;
+                                      _contentsTextController.text =
+                                          inputData.member.phoneNumber;
                                     });
                                   },
                                   child: Row(
@@ -97,8 +99,8 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                            provider.queriedMemberList[index]
-                                                .name,
+                                            provider
+                                                .queriedMemberList[index].name,
                                             style: Constants.itemTextStyle),
                                       ),
                                       Flexible(
@@ -122,27 +124,39 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                margin: EdgeInsets.fromLTRB(10, 0, 5, 10),
+                margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                 alignment: const Alignment(0.0, 0.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Flexible(
-                      child: Text(
-                        "Name: " + inputData.member.name,
-                        style: Constants.itemTextStyle,
+                    Flexible(    
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            inputData.member.name = value;
+                          },
+                          controller: _receiverTextController,
+                          
+                          decoration: const InputDecoration(
+                            labelText: "우편물 수신인",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
                     ),
                     Flexible(
-                      child: Text("Phone: " + inputData.member.phoneNumber,
-                          style: Constants.itemTextStyle),
-                    ),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          inputData.member.phoneNumber = value;
+                        },
+                        controller: _contentsTextController,
+                        
+                        decoration: const InputDecoration(
+                          labelText: "수신인 번호",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -157,7 +171,6 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
                       onChanged: (value) {
                         inputData.sender = value;
                       },
-                      controller: senderTextController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: "우편물 발신인"))),
             ),
@@ -166,12 +179,10 @@ class _Post_InputDataWidgetState extends State<Post_InputDataWidget> {
               fit: FlexFit.tight,
               child: Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 5, 10),
-                  
                   child: TextField(
                       onChanged: (value) {
                         inputData.postCount = value;
                       },
-                      controller: countTextController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: "우편물 개수"))),
             ),

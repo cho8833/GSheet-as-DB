@@ -33,7 +33,7 @@ class GSheetsTableRepository implements TableRepository {
   }
 
   @override
-  Future<String?> appendDataToHistory(List<NotifyModel> notifies) async {
+  Future<bool> appendDataToHistory(List<NotifyModel> notifies) async {
     final Spreadsheet historySpreadsheet =
         await this.historySpreadsheet.catchError((_) {
       _historySpreadsheet = null;
@@ -41,7 +41,14 @@ class GSheetsTableRepository implements TableRepository {
     });
     return historySpreadsheet
         .getSheetsByIndex(0)!
-        .appendRow(notifies.map((e) => e.toRow()).toList());
+        .appendRow(notifies.map((e) => e.toRow()).toList())
+        .then((spreadsheetID) {
+      if (spreadsheetID != null) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
   @override

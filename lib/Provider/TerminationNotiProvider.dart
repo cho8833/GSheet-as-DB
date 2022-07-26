@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:test_application/Model/TerminationNotiModel.dart';
 import 'package:test_application/Repository/TableRepository/GSheetsTableRepository.dart';
+import 'package:test_application/Repository/TableRepository/ScriptTableRepository.dart';
 import 'package:test_application/Repository/TableRepository/TableRepository.dart';
 import 'package:test_application/util/Util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class TerminationNotiProvier extends ChangeNotifier {
-  final TableRepository _repository = GSheetsTableRepository();
+  final ScriptRepository _repository = ScriptRepository();
   List<TerminationNoti> notifies = [];
 
   void addNoti(TerminationNoti noti) {
@@ -20,18 +21,9 @@ class TerminationNotiProvier extends ChangeNotifier {
   }
 
   void commit() {
-    _repository.appendData(notifies).then((spreadsheetId) async {
-      if (spreadsheetId != null) {
-        String url = Util.generateSheetDownloadUrl(spreadsheetId);
-        if (await canLaunchUrlString(url)) {
-          launchUrlString(url).then((isSuccess) {
-            if (isSuccess) {
-              _repository.appendDataToHistory(notifies);
-            }
-          });
-        }
-      }
-      notifyListeners();
+    List<List<String>> data = notifies.map((e) => e.toRow()).toList();
+    _repository.excuteExireProcess(data).then((spreadshseetId) {
+      print(spreadshseetId);
     });
   }
 }

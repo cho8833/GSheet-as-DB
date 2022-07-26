@@ -5,5 +5,5 @@ import '../../Model/TerminationNotiModel.dart';
 abstract class TableRepository {
   Future<String?> appendData(List<NotifyModel> notifies);
   Future<bool> deleteSheet();
-  Future<String?> appendDataToHistory(List<NotifyModel> notifies);
+  Future<bool> appendDataToHistory(List<NotifyModel> notifies);
 }

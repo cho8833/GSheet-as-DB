@@ -17,11 +17,13 @@ class Termination_InputDataWidget extends StatefulWidget {
 
 class _Termination_InputDataWidgetState
     extends State<Termination_InputDataWidget> {
-  TextEditingController senderTextController = TextEditingController();
-  TextEditingController countTextController = TextEditingController();
-
+  final TextEditingController _dateTextController = TextEditingController();
+  final TextEditingController _typeTextController = TextEditingController();
+  final TextEditingController _nameTextController = TextEditingController();
+  final TextEditingController _phoneNumberTextController = TextEditingController();
   TerminationNoti inputData = TerminationNoti(
-      member: Member(phoneNumber: '', name: ''), moveInType: "", date: "");
+      member:
+          Member(phoneNumber: '', name: '', expireDate: "", moveInType: ""));
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,7 @@ class _Termination_InputDataWidgetState
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 60, 0),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
@@ -76,23 +77,28 @@ class _Termination_InputDataWidgetState
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Consumer<MemberProvider>(
-                        builder: (__, provider, aa) => ListView.builder(
+                        builder: (__, provider, aa) => ListView.separated(
                             controller: ScrollController(),
                             itemCount: provider.queriedMemberList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                    width: 1,
-                                  ),
+                            separatorBuilder: (context, index) => const Divider(
+                                  thickness: 1,
                                 ),
-                                height: 60,
+                            itemBuilder: (BuildContext context, int index) {
+                              return SizedBox(
+                                height: 50,
                                 child: TextButton(
                                   onPressed: () {
                                     setState(() {
                                       inputData.member =
                                           provider.queriedMemberList[index];
+                                      _phoneNumberTextController.text =
+                                          inputData.member.phoneNumber;
+                                      _nameTextController.text =
+                                          inputData.member.name;
+                                      _typeTextController.text =
+                                          inputData.member.moveInType;
+                                      _dateTextController.text =
+                                          inputData.member.expireDate;
                                     });
                                   },
                                   child: Row(
@@ -126,27 +132,38 @@ class _Termination_InputDataWidgetState
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                margin: EdgeInsets.fromLTRB(10, 0, 5, 10),
+                margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                 alignment: const Alignment(0.0, 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Flexible(
-                      child: Text(
-                        "Name: " + inputData.member.name,
-                        style: Constants.itemTextStyle,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            inputData.member.name = value;
+                          },
+                          controller: _nameTextController,
+                          decoration: const InputDecoration(
+                            labelText: "수신인",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
                     ),
                     Flexible(
-                      child: Text("Phone: " + inputData.member.phoneNumber,
-                          style: Constants.itemTextStyle),
-                    ),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          inputData.member.phoneNumber = value;
+                        },
+                        controller: _phoneNumberTextController,
+                        decoration: const InputDecoration(
+                          labelText: "수신인 번호",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -159,9 +176,9 @@ class _Termination_InputDataWidgetState
                   alignment: const Alignment(0.0, 0.0),
                   child: TextField(
                       onChanged: (value) {
-                        inputData.moveInType = value;
+                        inputData.member.moveInType = value;
                       },
-                      controller: senderTextController,
+                      controller: _typeTextController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: "입주 유형"))),
             ),
@@ -172,11 +189,12 @@ class _Termination_InputDataWidgetState
                   margin: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                   child: TextField(
                       onChanged: (value) {
-                        inputData.date = value;
+                        inputData.member.expireDate = value;
                       },
-                      controller: countTextController,
+                      controller: _dateTextController,
                       decoration: const InputDecoration(
-                          border: OutlineInputBorder(), labelText: "계약 종료 날짜"))),
+                          border: OutlineInputBorder(),
+                          labelText: "계약 종료 날짜"))),
             ),
             Flexible(
               flex: 1,

@@ -28,34 +28,42 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Flexible(
-                child: Text(
-                  "Name",
-                  style: Constants.itemTextStyle,
+          Container(
+            padding: const EdgeInsets.only(left: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    "Name",
+                    style: Constants.itemTextStyle,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: Text(
-                  "Phone",
-                  style: Constants.itemTextStyle,
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    "Phone",
+                    style: Constants.itemTextStyle,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: Text(
-                  "From",
-                  style: Constants.itemTextStyle,
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    "From",
+                    style: Constants.itemTextStyle,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: Text(
-                  "Count",
-                  style: Constants.itemTextStyle,
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    "Contents",
+                    style: Constants.itemTextStyle,
+                  ),
                 ),
-              ),
-            ],
+                Flexible(flex: 1, child: Text(""))
+              ],
+            ),
           ),
           Flexible(
             flex: 7,
@@ -66,17 +74,14 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                 borderRadius: BorderRadius.circular(5)
               ),
               child: Consumer<PostNotiProvider>(
-                builder: (context, provider, child) => ListView.builder(
+                builder: (context, provider, child) => ListView.separated(
                   controller: ScrollController(),
                   itemCount: provider.notifies.length,
+                  separatorBuilder: (context, index) => const Divider(
+                    thickness: 1,
+                  ),
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.green,
-                          width: 1,
-                        ),
-                      ),
+                    return SizedBox(
                       height: 50,
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -84,28 +89,38 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
+                              flex: 1,
                               child: Text(
-                                provider.notifies[index].member.phoneNumber,
+                                provider.notifies[index].member.name,
                                 style: Constants.itemTextStyle,
                               ),
                             ),
                             Flexible(
-                              child: Text(provider.notifies[index].member.name,
+                              flex: 1,
+                              child: Text(provider.notifies[index].member.phoneNumber,
                                   style: Constants.itemTextStyle),
                             ),
                             Flexible(
+                              flex: 1,
                               child: Text(provider.notifies[index].sender,
                                   style: Constants.itemTextStyle),
                             ),
                             Flexible(
+                              flex: 1,
                               child: Text(provider.notifies[index].postCount,
                                   style: Constants.itemTextStyle),
                             ),
-                            ElevatedButton(
+                            Flexible(
+                              flex: 1,
+                              child: IconButton(
+                                hoverColor: Colors.transparent,
+                                focusColor: Colors.transparent,
                                 onPressed: () {
                                   provider.deleteNoti(index);
-                                },
-                                child: Text("삭제"))
+                                }, 
+                                icon: const Icon(Icons.close)
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -130,7 +145,7 @@ class _Post_CommitTableWidgetState extends State<Post_CommitTableWidget> {
                       Provider.of<PostNotiProvider>(context, listen: false)
                           .commit();
                     },
-                    child: Text("구글시트 다운로드")),
+                    child: const Text("구글시트 다운로드", style: TextStyle(fontWeight: FontWeight.bold),)),
               ),
             ),
           ),

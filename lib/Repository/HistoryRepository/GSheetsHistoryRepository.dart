@@ -11,7 +11,6 @@ class GSheetsHistoryRepository implements HistoryRepository {
     _spreadsheet ??= GSheetsAPIConfig.gSheet
         .getSpreadsheet(GSheetsAPIConfig.HISTORY_SPREAD_ID);
     return _spreadsheet!;
-    
   }
 
   @override
@@ -26,9 +25,7 @@ class GSheetsHistoryRepository implements HistoryRepository {
       List<List<String>> data = histories.map((e) => History.toRow(e)).toList();
       return worksheet.appendRow(data);
     } else {
-      return Future(
-        () => null,
-      );
+      return Future.error(Exception("error appending data"));
     }
   }
 }

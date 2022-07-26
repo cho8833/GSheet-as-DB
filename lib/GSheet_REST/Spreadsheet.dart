@@ -65,23 +65,51 @@ class Worksheet {
   }
 
   Future<SheetData> allRows() async {
-    int? column = properties?.gridProperties?.columnCount;
+    int column = properties!.gridProperties!.columnCount!;
     int? row = properties?.gridProperties?.rowCount;
 
-    late String colRange;
-    try {
-      colRange = String.fromCharCode(column! + 64);
-    } catch (_) {
-      colRange = String.fromCharCode(26);
+    String colRange = "";
+    int carry = column ~/ 26;
+    if (carry == 0) {
+      colRange += String.fromCharCode(column + 64);
+    } else {
+      colRange += String.fromCharCode(carry + 64) +
+          String.fromCharCode(column % 26 + 64);
     }
+
     Uri uri = Uri(
         scheme: 'https',
         host: 'sheets.googleapis.com',
         path: '/v4/spreadsheets/$spreadsheetID/values/A1:$colRange' +
             row.toString());
     return client.get(uri).then((value) {
-      // check response
-      return SheetData.fromJson(jsonDecode(value.body));
+      if (checkResponse(value)) {
+        SheetData data = SheetData.fromJson(jsonDecode(value.body));
+        return data;
+      } else {
+        return Future.error(Exception("error getting all Rows"));
+      }
+    });
+  }
+
+  Future<List<SheetData>> batchGet(List<String> ranges) {
+    Uri uri = Uri(
+        scheme: 'https',
+        host: 'sheets.googleapis.com',
+        path: '/v4/spreadsheets/$spreadsheetID/values:batchGet',
+        queryParameters: {'ranges': ranges});
+        
+    return client.get(uri).then((response) {
+      if (checkResponse(response)) {
+        Map<String, dynamic> body = jsonDecode(response.body);
+        List<SheetData> datas = [];
+        body['valueRanges'].forEach((range) {
+          datas.add(SheetData.fromJson(range));
+        });
+        return datas;
+      } else {
+        return Future.error(Exception("failed getting batch data"));
+      }
     });
   }
 
@@ -95,7 +123,11 @@ class Worksheet {
     request['values'] = values;
 
     return client.post(uri, body: jsonEncode(request)).then((response) {
-      return checkResponse(response);
+      if (checkResponse(response)) {
+        return spreadsheetID;
+      } else {
+        return Future.error(Exception("error appending row"));
+      }
     });
   }
 }
@@ -189,15 +221,17 @@ class SheetData {
 
   SheetData({this.range, this.majorDimension, required this.values});
 
-  SheetData.fromJson(Map<String, dynamic> json) {
-    range = json['range'];
-    majorDimension = json['majorDimension'];
+  factory SheetData.fromJson(Map<String, dynamic> json) {
+    SheetData data = SheetData(values: []);
+    data.range = json['range'];
+    data.majorDimension = json['majorDimension'];
     if (json['values'] != null) {
-      values = <List<String>>[];
+      data.values = <List<String>>[];
       json['values'].forEach((v) {
-        values.add(List.from(v));
+        data.values.add(List.from(v));
       });
     }
+    return data;
   }
 
   Map<String, dynamic> toJson() {
@@ -211,10 +245,11 @@ class SheetData {
   }
 }
 
-String? checkResponse(Response response) {
+bool checkResponse(Response response) {
   if (response.statusCode == 200) {
-    return jsonDecode(response.body)["spreadsheetId"];
+    print(response.body);
+    return true;
   } else {
-    return null;
+    return false;
   }
 }

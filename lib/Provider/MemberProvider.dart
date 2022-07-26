@@ -25,7 +25,7 @@ class MemberProvider extends ChangeNotifier {
   }
 
   void getAllMember() {
-    _repository.getAllData().then((value) {
+    _repository.getAllMember().then((value) {
       memberList = value;
       queriedMemberList = memberList;
       notifyListeners();
